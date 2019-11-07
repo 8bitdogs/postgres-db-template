@@ -6,7 +6,7 @@ VERSION ?= 1.0
 USER ?= admin
 PASSWORD ?= qwe123
 HOST ?= $(shell docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${SERVICENAME})
-DATABASE ?= jared
+DATABASE ?= database
 
 # folder struct
 TABLESDIR = sql/tables
