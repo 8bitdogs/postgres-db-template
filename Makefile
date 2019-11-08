@@ -6,6 +6,7 @@ VERSION ?= 1.0
 USER ?= admin
 PASSWORD ?= qwe123
 HOST ?= $(shell docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${SERVICENAME})
+PORT ?= 5432
 DATABASE ?= database
 
 # folder struct
@@ -13,12 +14,12 @@ TABLESDIR = sql/tables
 FIXTURESDIR = sql/tables/fixtures
 
 # psql aliases
-psql_admin := PGPASSWORD=${PASSWORD} psql -h ${HOST} -U postgres -a \
+psql_admin := PGPASSWORD=${PASSWORD} psql -h ${HOST}:${PORT} -U postgres -a \
 				-v username=${USER}	\
 				-v dbname=${DATABASE} \
 				-v userpassword="'${PASSWORD}'"
 
-psql_user := PGPASSWORD=${PASSWORD} psql -h ${HOST} -U ${USER} -d ${DATABASE} 
+psql_user := PGPASSWORD=${PASSWORD} psql -h ${HOST}:${PORT} -U ${USER} -d ${DATABASE} 
 
 connect:
 	$(psql_user)
@@ -61,10 +62,12 @@ build:
 up:	
 	docker run \
 		--name ${SERVICENAME} \
+		--expose ${PORT} \
 		-e POSTGRES_PASSWORD=${PASSWORD} \
 		-d \
 		-v "$(CURDIR)":/database \
-		${SERVICENAME}:${VERSION} 
+		${SERVICENAME}:${VERSION} \
+		postgres -p ${PORT}
 
 rm:
 	-@docker container rm ${SERVICENAME}
