@@ -14,12 +14,12 @@ TABLESDIR = sql/tables
 FIXTURESDIR = sql/tables/fixtures
 
 # psql aliases
-psql_admin := PGPASSWORD=${PASSWORD} psql -h ${HOST}:${PORT} -U postgres -a \
+psql_admin := PGPASSWORD=${PASSWORD} psql -h ${HOST} -p ${PORT} -U postgres -a \
 				-v username=${USER}	\
 				-v dbname=${DATABASE} \
 				-v userpassword="'${PASSWORD}'"
 
-psql_user := PGPASSWORD=${PASSWORD} psql -h ${HOST}:${PORT} -U ${USER} -d ${DATABASE} 
+psql_user := PGPASSWORD=${PASSWORD} psql -h ${HOST} -p ${PORT} -U ${USER} -d ${DATABASE}
 
 connect:
 	$(psql_user)
